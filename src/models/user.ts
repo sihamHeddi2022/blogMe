@@ -12,11 +12,9 @@ export interface IUser extends mongoose.Document {
 }
 
 const UserSchema: mongoose.Schema<IUser> = new mongoose.Schema({
- email: { type: String, unique: true,validate:()=>{
-  
- } },
+ email: { type: String},
  fullName:{type:String,required:true},
- password: { type: String,required:true,maxlength:5 },
+ password: { type: String,required:true,minlength:[5,"password must be at least 5"] },
 //  image : {type:String}
 });
 

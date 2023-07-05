@@ -1,6 +1,10 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { UserModel } from './models/user';
+import mongoose from 'mongoose';
 
 
+import dotenv from "dotenv"
+dotenv.config()
 
 
 const app = express();
@@ -11,7 +15,7 @@ app.use(express.json())
 
 class AppError extends Error {
     status:number
-    constructor(st:number,message:string){
+    constructor(st:number,message:string | any){
         super(message)
 
         this.status=st
@@ -20,21 +24,12 @@ class AppError extends Error {
 
 
 
-const users = [
-    {
-      id:1,
-      username:"Ali"
-    },
-    {
-      id:2,
-      username:"Mohamed"
-    }
-]
+
 
 const errorMiddlware = (err:AppError,req:Request,res:Response,next:NextFunction)=>{
       console.log("jsjjsdjsdj");
       
-     return res.status( err.status).json({message:err.message})
+      return res.status( err.status).json({message:err.message})
 }
 
 app.use(errorMiddlware)
@@ -43,21 +38,35 @@ app.use(errorMiddlware)
 
 
 
-app.post("/",(req:Request,res:Response,next:NextFunction)=>{
+app.post("/",async (req:Request,res:Response,next:NextFunction)=>{
 
-   const {id,username} = req.body
-   const user = users.find(u=>u.id==id)
-   console.log(user);
-   
-   if(user) next(new AppError(400,"id must be unique"))
-   else {
-    users.push({id,username})
-    return res.status(200).json({message:"hello ^__^"})
-   }
+   const user = req.body
+  try {
+    const ifExist = await UserModel.findOne({email:user.email})
+    if(ifExist) next(new AppError(400,"email must be unique"))
+    const u = await new UserModel({...user}).save()
+    if(u)  res.status(200).send("yahooo !!")
+  } catch (error) {
+    if (error instanceof Error) {
+      next(new AppError(400,error.message))
+
+    }
+  }
 })
 
+const dbUrl = process.env.DB_URL;
+
+if (!dbUrl) {
+  console.error('DB_URL is missing in the environment variables.');
+  process.exit(1);
+}
 
 
-app.listen(port, () => {
-  console.log(`Timezones by location application is running on port ${port}.`);
-});
+app.listen(port,()=>
+  {
+    mongoose.connect(dbUrl ).then(()=>{
+    
+  console.log("server is happy now ^__^")
+    })
+  }
+)

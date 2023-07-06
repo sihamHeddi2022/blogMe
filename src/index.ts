@@ -1,58 +1,26 @@
-import express, { NextFunction, Request, Response } from 'express';
-import { UserModel } from './models/user';
+import express from 'express';
 import mongoose from 'mongoose';
 
 
 import dotenv from "dotenv"
+import { errorMiddlware } from './middleware/error';
+import route from './routes';
+import bodyParser from 'body-parser';
+
+
 dotenv.config()
 
 
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.json());
+
 app.use(express.json())
-
-
-class AppError extends Error {
-    status:number
-    constructor(st:number,message:string | any){
-        super(message)
-
-        this.status=st
-    }
-}
-
-
-
-
-
-const errorMiddlware = (err:AppError,req:Request,res:Response,next:NextFunction)=>{
-      console.log("jsjjsdjsdj");
-      
-      return res.status( err.status).json({message:err.message})
-}
 
 app.use(errorMiddlware)
 
-
-
-
-
-app.post("/",async (req:Request,res:Response,next:NextFunction)=>{
-
-   const user = req.body
-  try {
-    const ifExist = await UserModel.findOne({email:user.email})
-    if(ifExist) next(new AppError(400,"email must be unique"))
-    const u = await new UserModel({...user}).save()
-    if(u)  res.status(200).send("yahooo !!")
-  } catch (error) {
-    if (error instanceof Error) {
-      next(new AppError(400,error.message))
-
-    }
-  }
-})
+app.use("/api/v1/",route)
 
 const dbUrl = process.env.DB_URL;
 

@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 import { errorMiddlware } from './middleware/error';
 import route from './routes';
 import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 
 dotenv.config()
@@ -19,6 +20,11 @@ app.use(bodyParser.json());
 app.use(express.json())
 
 app.use(errorMiddlware)
+
+app.use(fileUpload({
+  useTempFiles : true,
+  tempFileDir : '/tmp/'
+}));
 
 app.use("/api/v1/",route)
 

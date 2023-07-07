@@ -5,7 +5,7 @@ import { AppError } from "./error";
 
 
 
-export const verifyToken = async(req:Request,res:Response,next:NextFunction)=>{
+export const verifyToken = async(req:Request | any,res:Response,next:NextFunction)=>{
    
         const authorizationHeader = req.headers.authorization;
          
@@ -27,6 +27,7 @@ export const verifyToken = async(req:Request,res:Response,next:NextFunction)=>{
                    }
         
               }
+              req.user = payload.id
               return next()
 
             }) 

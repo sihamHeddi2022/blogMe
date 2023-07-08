@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { IUser } from './user';
 
 
-interface Comment extends mongoose.Document{
+export interface Comment extends mongoose.Document{
     userId:mongoose.Types.ObjectId | IUser;
     content:string;
     reviews:number
@@ -33,11 +33,11 @@ const PostSchema: mongoose.Schema<IPost> = new mongoose.Schema({
     description:{type:String,required:true},
     category: {type:Number,enum:Category },
     authorId:   {type: mongoose.Schema.Types.ObjectId, ref: 'User',index:true,required:true},
-    comments:new  mongoose.Schema<Comment>({
+    comments:[new  mongoose.Schema<Comment>({
          content: {type:String,required:true},
          reviews:{type:Number,required:true},    
          userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User',index:true,required:true} 
-        },{timestamps:true})
+        },{timestamps:true})]
 
 },{timestamps:true});
 

@@ -36,18 +36,29 @@ export const getPostById = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const getAllpostsWithQuery=async (req:Request,res:Response,next:NextFunction)=>{
     try {
-     
+       const {keyword,category}= req.params
+       console.log(typeof keyword);
+       
+        const matchingPosts = await PostModel.find({ title: { $regex: keyword, $options: "i" }, category: category });
+       if(matchingPosts) return res.status(200).json(matchingPosts)
     } catch (error) {
-    
+        console.log(error);
+        
+        return next(new AppError(500,"internal err server"))  
+        
     } 
 }
 
 
 export const getPopularPosts=async (req:Request,res:Response,next:NextFunction)=>{
     try {
-     
+        const matchingPosts = await PostModel.find({ "comments.reviews": { $gte: 4, $lte: 5 } }).limit(6);
+        
+        if(matchingPosts) return res.status(200).json(matchingPosts)
     } catch (error) {
-    
+        console.log(error);
+        
+        return next(new AppError(500,"internal err server"))  
     } 
 }
 ;

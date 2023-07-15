@@ -7,7 +7,7 @@ import { errorMiddlware } from './middleware/error';
 import route from './routes';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
-
+import cors from 'cors'
 
 dotenv.config()
 
@@ -15,6 +15,7 @@ dotenv.config()
 const app = express();
 const port = 3000;
 
+app.use(cors())
 app.use(bodyParser.json());
 
 app.use(express.json())

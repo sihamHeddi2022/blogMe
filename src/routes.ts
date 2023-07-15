@@ -1,7 +1,7 @@
 import {Router} from "express";
 import { login, register,disconnect, getRefreshToken } from "./controllers/auth";
 import { verifyToken } from "./middleware/auth";
-import {addPost, deletePost, updateImgPost, updatePost } from "./controllers/post";
+import {addPost, deletePost, getAllpostsWithQuery, getPopularPosts, getPostById, updateImgPost, updatePost } from "./controllers/post";
 import { addFeedBack, deleteYourFeedBack, updateYourFeedBack } from "./controllers/feedback";
 
 
@@ -19,6 +19,7 @@ route.post("/disconnect",verifyToken,disconnect)
 
 route.post("/post",verifyToken,addPost)
 route.route("/post/:id").put(verifyToken,updatePost)
+.get(getPostById)
 .delete(verifyToken,deletePost)
 route.put("/post/:id/img",verifyToken,updateImgPost)
 
@@ -31,7 +32,8 @@ route.route("/post/:id/feedback/:fid")
 
 
 
-
+route.get("/popular",getPopularPosts)
+route.get("/search",getAllpostsWithQuery)
 
 
 

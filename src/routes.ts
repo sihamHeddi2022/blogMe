@@ -1,7 +1,7 @@
 import {Router} from "express";
 import { login, register,disconnect, getRefreshToken } from "./controllers/auth";
 import { verifyToken } from "./middleware/auth";
-import {addPost, deletePost, getAllpostsWithQuery, getPopularPosts, getPostById, updateImgPost, updatePost } from "./controllers/post";
+import {addPost, deletePost, getAllpostsWithQuery, getPopularPosts,getAllPostsOfUser, getPostById, updateImgPost, updatePost } from "./controllers/post";
 import { addFeedBack, deleteYourFeedBack, updateYourFeedBack } from "./controllers/feedback";
 
 
@@ -36,6 +36,7 @@ route.get("/popular",getPopularPosts)
 route.get("/search",getAllpostsWithQuery)
 
 
+route.get("/posts",verifyToken,getAllPostsOfUser)
 
 
 

@@ -36,8 +36,8 @@ export const getPostById = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const getAllpostsWithQuery=async (req:Request,res:Response,next:NextFunction)=>{
     try {
-       const {keyword,category}= req.params
-       console.log(typeof keyword);
+       const {keyword,category}= req.query
+       console.log("fgfdfd ",keyword);
        
         const matchingPosts = await PostModel.find({ title: { $regex: keyword, $options: "i" }, category: category });
        if(matchingPosts) return res.status(200).json(matchingPosts)

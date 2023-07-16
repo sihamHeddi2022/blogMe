@@ -21,9 +21,9 @@ export const getRefreshToken = async (req:Request,res:Response,next:NextFunction
     }
 }
 
-export const disconnect= async (req:Request,res:Response,next:NextFunction)=>{
+export const disconnect= async (req:Request | any,res:Response,next:NextFunction)=>{
       try {
-          const user = await UserModel.findOne({_id:req.body.id})
+          const user = await UserModel.findOne({_id:req.user})
           
           if(!user) return next(new AppError(402,"there is no user with that id"))
           user.refreshToken = undefined
@@ -51,7 +51,7 @@ export const login = async (req:Request,res:Response,next:NextFunction) => {
 
         const key:string | any = process.env.PRIVATE_KEY
 
-        const acessToken = jwt.sign({id:user._id},key,{expiresIn:"3m"})
+        const acessToken = jwt.sign({id:user._id},key,{expiresIn:"3d"})
         
         const refreshToken = jwt.sign({id:user._id},key,{expiresIn:"1y"})
          

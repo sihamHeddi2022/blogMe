@@ -29,7 +29,7 @@ export interface IPost extends mongoose.Document {
 
 const PostSchema: mongoose.Schema<IPost> = new mongoose.Schema({
     title: { type: String,required:true},
-    image:{type:String,required:true},
+    image:{type:String},
     description:{type:String,required:true},
     category: {type:Number,enum:Category },
     authorId:   {type: mongoose.Schema.Types.ObjectId, ref: 'User',index:true,required:true},

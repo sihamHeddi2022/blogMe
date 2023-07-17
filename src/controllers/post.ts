@@ -67,7 +67,7 @@ export const addPost=async (req:Request | any,res:Response,next:NextFunction)=>{
     try {
        const p= {...req.body,authorId:req.user}
        
-       const file = req.files.file
+   /*     const file = req.files.file
         
 
        const ext = file.name.split(".")[1]
@@ -85,7 +85,10 @@ export const addPost=async (req:Request | any,res:Response,next:NextFunction)=>{
 
 
        })
-       
+        */
+       const post = await new PostModel({...p}).save()
+       if(post) return res.status(200).json({id:req.user})
+
     } catch (error) {
         console.log(error);
         
